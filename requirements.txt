@@ -1,7 +1,22 @@
-streamlit
-opencv-python
-numpy
-mediapipe
-tensorflow
-pygame
-gtts
+# requirements.txt
+
+# OpenCV for video capture and processing
+opencv-python==4.5.3.56
+
+# NumPy for numerical operations
+numpy==1.21.0
+
+# Mediapipe for hand tracking
+mediapipe==0.8.6
+
+# TensorFlow for deep learning
+tensorflow==2.5.0
+
+# Pygame for audio playback
+pygame==2.0.1
+
+# gTTS for text-to-speech conversion
+gTTS==2.2.3
+
+# Streamlit for the web app interface
+streamlit==1.11.0
