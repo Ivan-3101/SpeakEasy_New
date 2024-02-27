@@ -1,8 +1,7 @@
+streamlit
 opencv-python
 numpy
 mediapipe
 tensorflow
 pygame
 gTTS
-streamlit
-libgl1-mesa-glx
