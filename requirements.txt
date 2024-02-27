@@ -4,4 +4,3 @@ mediapipe
 tensorflow
 pygame
 gtts
-libgl1-mesa-glx
