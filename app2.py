@@ -7,17 +7,15 @@ from tensorflow.keras.models import load_model
 import pygame
 from gtts import gTTS
 import os
-import time
 
 # Load the trained model
-model = load_model("action.h5")
+model = load_model("action_new.h5")
 
 # Initialize variables
 actions = ["hello", "thanks", "yes"]
 threshold = 0.7
 sequence = []
 predicted_words = []
-prediction_delay = 1  # Delay in seconds between predictions
 
 # Set the output directory for Marathi audio files
 output_directory = "marathi_audio_files"
@@ -60,8 +58,6 @@ with mp.solutions.holistic.Holistic(min_detection_confidence=0.5, min_tracking_c
     # Display UI for video feed
     video_placeholder = st.image([], channels="BGR", use_column_width=True)
 
-    last_prediction_time = 0
-
     while cap.isOpened() and not stop_button:
         if start_button:
             ret, frame = cap.read()
@@ -90,11 +86,8 @@ with mp.solutions.holistic.Holistic(min_detection_confidence=0.5, min_tracking_c
 
                     # Visual and audio logic
                     if res[np.argmax(res)] > threshold:
-                        current_time = time.time()
-                        if current_time - last_prediction_time >= prediction_delay:
-                            predicted_words.append(predicted_word)
-                            play_marathi_audio(predicted_word)
-                            last_prediction_time = current_time
+                        predicted_words.append(predicted_word)
+                        play_marathi_audio(predicted_word)
                     else:
                         st.warning("Empty prediction result.")
 

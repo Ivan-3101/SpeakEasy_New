@@ -1,7 +1,6 @@
 streamlit
 opencv-python
-numpy
 mediapipe
 tensorflow
 pygame
-gTTS
+gtts
