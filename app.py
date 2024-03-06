@@ -102,8 +102,8 @@ with mp.solutions.holistic.Holistic(min_detection_confidence=0.5, min_tracking_c
             video_placeholder.image(image, channels="BGR", use_column_width=True)
 
             # Update the last 5 predicted words display
-            last_five_words.write("Last 5 Predicted Words:")
-            last_five_words.write(" ".join(predicted_words[-5:]))
+            last_five_words.text("Last 5 Predicted Words:")
+            last_five_words.text(" ".join(predicted_words[-5:]))
 
     # Release the video capture
     cap.release()
