@@ -1,13 +1,4 @@
 import streamlit as st
-import os
-
-# Set up virtual display
-os.system("Xvfb :99 -screen 0 1024x768x24 &")
-os.environ["DISPLAY"] = ":99"
-
-
-
-import streamlit as st
 import cv2
 import numpy as np
 import mediapipe as mp
