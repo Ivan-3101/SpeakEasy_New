@@ -8,6 +8,11 @@ import pygame
 from gtts import gTTS
 import os
 import time
+from pyvirtualdisplay import Display
+
+# Set up virtual display
+display = Display(visible=0, size=(1024, 768))
+display.start()
 
 # Load the trained model
 model = load_model("action.h5")
