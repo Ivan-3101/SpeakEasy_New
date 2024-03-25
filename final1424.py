@@ -15,7 +15,7 @@ import gtts
 
 
 # Load the trained model
-model = load_model("action_new.h5")
+model = load_model("action.h5")
 
 mp_holistic = mp.solutions.holistic  # Holistic model
 mp_drawing = mp.solutions.drawing_utils  # Drawing utilities
