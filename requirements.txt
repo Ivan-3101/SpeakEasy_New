@@ -3,3 +3,4 @@ numpy
 mediapipe
 tensorflow
 pygame
+gtts
