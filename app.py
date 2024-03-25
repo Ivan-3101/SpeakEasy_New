@@ -4,63 +4,75 @@ import numpy as np
 import mediapipe as mp
 from modules import mediapipe_detection, draw_styled_landmarks, extract_keypoints
 from tensorflow.keras.models import load_model
-import pygame
-from gtts import gTTS
+from marathi_audio import play_marathi_audio  # Import the play_marathi_audio function
 import os
-import time
 
 # Load the trained model
 model = load_model("action.h5")
 
 # Initialize variables
-actions = ["hello", "thanks", "yes"]
+actions = ["नमस्कार", "धन्यवाद", "होय"]
 threshold = 0.7
 sequence = []
 predicted_words = []
-prediction_delay = 5  # Delay in seconds between predictions
 
-# Set the output directory for Marathi audio files
-output_directory = "marathi_audio_files"
+# Center the title
+st.markdown("<h1 style='text-align: center;'>SpeakEasy</h1>", unsafe_allow_html=True)
 
-# Ensure the output directory exists
-if not os.path.exists(output_directory):
-    st.error(f"Error: Output directory '{output_directory}' not found. Make sure to run the script that generates the audio files.")
-    st.stop()
+# Add "How to Use the App" card section
+st.sidebar.markdown(
+    """
+    <div style='padding: 10px; border-radius: 5px; background-color: #070F2B;'>
+        <h3 style='margin-bottom: 10px;'>How to Use the App</h3>
+        <p>To use SpeakEasy, follow these steps:</p>
+        <ol>
+            <li>Click on the <strong>'Start Video Capture'</strong> button to begin capturing video.</li>
+            <li>Perform sign language gestures in front of your camera.</li>
+            <li>SpeakEasy will recognize the gestures and display the corresponding spoken words.</li>
+            <li>Click on the <strong>'Stop Video Capture'</strong> button to stop capturing video.</li>
+        </ol>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-# Generate the paths for existing Marathi audio files
-marathi_audio_files = {
-    "hello": os.path.join(output_directory, "hello.mp3"),
-    "thanks": os.path.join(output_directory, "thanks.mp3"),
-    "yes": os.path.join(output_directory, "yes.mp3"),
-}
-
-pygame.mixer.init()
-
-def play_marathi_audio(word):
-    audio_file = marathi_audio_files.get(word)
-    if audio_file:
-        pygame.mixer.music.load(audio_file)
-        pygame.mixer.music.play()
+# Add About card section
+st.sidebar.markdown(
+    """
+    <div style='padding: 10px; margin-top: 20px; border-radius: 5px; background-color: #070F2B;'>
+        <h3 style='margin-bottom: 10px;'>About</h3>
+        <p>SpeakEasy is a Streamlit app for real-time sign language interpretation. It uses computer vision and machine learning techniques to recognize sign language gestures and translates them into spoken language.</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 cap = cv2.VideoCapture(0)
 
 # Setting mediapipe model
-with mp.solutions.holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
-    st.title("Sign Language Interpretation App")
+holistic = mp.solutions.holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
-    # Create a state variable to store the last 5 predicted words
-    last_five_words = st.empty()
+with holistic as holistic:
 
-    # Button to start video capture
-    start_button = st.button("Start Video Capture")
-
-    # Button to stop video capture
-    stop_button = st.button("Stop Video Capture")
+    # Create a container for the predicted word
+    predicted_word_container = st.empty()
 
     # Display UI for video feed
-    video_placeholder = st.image([], channels="BGR", use_column_width=True)
+    video_placeholder = st.empty()
 
-    last_prediction_time = 0
+    # Create empty columns
+    empty_col1, btn_col1, btn_col2, empty_col2 = st.columns([1, 1, 1, 1])
+
+    # Center the buttons
+    with btn_col1:
+        start_button = st.button("Start Video Capture")
+
+    with btn_col2:
+        stop_button = st.button("Stop Video Capture")
+
+    # Initialize an expander for predicted words
+    with st.expander("**Predicted Words**", expanded=False) as predicted_words_expander:
+        predicted_words_text = st.empty()
 
     while cap.isOpened() and not stop_button:
         if start_button:
@@ -90,21 +102,18 @@ with mp.solutions.holistic.Holistic(min_detection_confidence=0.5, min_tracking_c
 
                     # Visual and audio logic
                     if res[np.argmax(res)] > threshold:
-                        current_time = time.time()
-                        if current_time - last_prediction_time >= prediction_delay:
-                            predicted_words.append(predicted_word)
-                            play_marathi_audio(predicted_word)
-                            last_prediction_time = current_time
+                        predicted_words.append(predicted_word)
+                        play_marathi_audio(predicted_word)
                     else:
                         st.warning("Empty prediction result.")
 
             # Display UI
             video_placeholder.image(image, channels="BGR", use_column_width=True)
 
-            # Update the last 5 predicted words display
-            last_five_words.write("Last 5 Predicted Words:")
-            last_five_words.write(" ".join(predicted_words[-5:]))
+            # Update the predicted word display
+            if predicted_word:
+                styled_text = f"<h3 style='text-align: center; color:green;'>Predicted Word: {predicted_word}</h3>"
+                predicted_word_container.markdown(styled_text, unsafe_allow_html=True)
 
-    # Release the video capture
-    cap.release()
-    cv2.destroyAllWindows()
+            # Update predicted words inside the expander
+            predicted_words_text.write(" ".join(predicted_words), unsafe_allow_html=True)

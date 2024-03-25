@@ -19,6 +19,24 @@ predicted_words = []
 # Center the title
 st.markdown("<h1 style='text-align: center;'>SpeakEasy</h1>", unsafe_allow_html=True)
 
+# Add "How to Use the App" section
+st.sidebar.subheader("How to Use the App")
+st.sidebar.write(
+    "To use SpeakEasy, follow these steps:\n"
+    "1. Click on the 'Start Video Capture' button to begin capturing video.\n"
+    "2. Perform sign language gestures in front of your camera.\n"
+    "3. SpeakEasy will recognize the gestures and display the corresponding spoken words.\n"
+    "4. Click on the 'Stop Video Capture' button to stop capturing video.\n"
+)
+
+# Add About section
+st.sidebar.subheader("About")
+st.sidebar.write(
+    "SpeakEasy is a Streamlit app for real-time sign language interpretation. "
+    "It uses computer vision and machine learning techniques to recognize sign language gestures "
+    "and translates them into spoken language."
+)
+
 cap = cv2.VideoCapture(0)
 
 # Setting mediapipe model
@@ -26,22 +44,25 @@ holistic = mp.solutions.holistic.Holistic(min_detection_confidence=0.5, min_trac
 
 with holistic as holistic:
 
-    # Create a state variable to store the last 5 predicted words
-    last_five_words = st.empty()
-
     # Create a container for the predicted word
     predicted_word_container = st.empty()
 
     # Display UI for video feed
     video_placeholder = st.empty()
 
-    # Button to start video capture
-    start_button_col, stop_button_col = st.columns([1, 1])
-    with start_button_col:
+    # Create empty columns
+    empty_col1, btn_col1, btn_col2, empty_col2 = st.columns([1, 1, 1, 1])
+
+    # Center the buttons
+    with btn_col1:
         start_button = st.button("Start Video Capture")
 
-    with stop_button_col:
+    with btn_col2:
         stop_button = st.button("Stop Video Capture")
+
+    # Initialize an expander for predicted words
+    with st.expander("Predicted Words", expanded=False) as predicted_words_expander:
+        predicted_words_text = st.empty()
 
     while cap.isOpened() and not stop_button:
         if start_button:
@@ -84,6 +105,5 @@ with holistic as holistic:
                 styled_text = f"<h3 style='text-align: center; color:green;'>Predicted Word: {predicted_word}</h3>"
                 predicted_word_container.markdown(styled_text, unsafe_allow_html=True)
 
-            # Update the last 5 predicted words display
-            last_five_words.write("Last 5 Predicted Words:")
-            last_five_words.write(" ".join(predicted_words[-5:]))
+            # Update predicted words inside the expander
+            predicted_words_text.write(" ".join(predicted_words), unsafe_allow_html=True)

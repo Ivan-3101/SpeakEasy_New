@@ -26,9 +26,6 @@ holistic = mp.solutions.holistic.Holistic(min_detection_confidence=0.5, min_trac
 
 with holistic as holistic:
 
-    # Create a state variable to store the last 5 predicted words
-    last_five_words = st.empty()
-
     # Create a container for the predicted word
     predicted_word_container = st.empty()
 
@@ -42,6 +39,10 @@ with holistic as holistic:
 
     with stop_button_col:
         stop_button = st.button("Stop Video Capture")
+
+    # Initialize an expander for predicted words
+    with st.expander("Predicted Words", expanded=False) as predicted_words_expander:
+        predicted_words_text = st.empty()
 
     while cap.isOpened() and not stop_button:
         if start_button:
@@ -84,6 +85,5 @@ with holistic as holistic:
                 styled_text = f"<h3 style='text-align: center; color:green;'>Predicted Word: {predicted_word}</h3>"
                 predicted_word_container.markdown(styled_text, unsafe_allow_html=True)
 
-            # Update the last 5 predicted words display
-            last_five_words.write("Last 5 Predicted Words:")
-            last_five_words.write(" ".join(predicted_words[-5:]))
+            # Update predicted words inside the expander
+            predicted_words_text.write(" ".join(predicted_words), unsafe_allow_html=True)
