@@ -31,8 +31,8 @@ st.markdown("<h1 style='text-align: center;'>SpeakEasy</h1>", unsafe_allow_html=
 # Add "How to Use the App" card section
 st.sidebar.markdown(
     """
-    <div style='padding: 10px; border-radius: 5px; background-color: #070F2B;'>
-        <h3 style='margin-bottom: 10px;'>How to Use the App</h3>
+    <div style='padding: 10px; border-radius: 10px; background-color: #070F2B;'>
+        <h3 style='text-align: center;margin-bottom: 10px;'>How to Use the App</h3>
         <p>To use SpeakEasy, follow these steps:</p>
         <ol>
             <li>Click on the <strong>'Start Video Capture'</strong> button to begin capturing video.</li>
@@ -48,8 +48,8 @@ st.sidebar.markdown(
 # Add About card section
 st.sidebar.markdown(
     """
-    <div style='padding: 10px; margin-top: 20px; border-radius: 5px; background-color: #070F2B;'>
-        <h3 style='margin-bottom: 10px;'>About</h3>
+    <div style='padding: 10px; margin-top: 20px; border-radius: 10px; background-color: #070F2B;'>
+        <h3 style='text-align: center; margin-bottom: 10px;'>About</h3>
         <p>SpeakEasy is a Streamlit app for real-time sign language interpretation. It uses computer vision and machine learning techniques to recognize sign language gestures and translates them into spoken language.</p>
     </div>
     """,
