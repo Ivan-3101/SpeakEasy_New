@@ -8,6 +8,12 @@ import os
 import pygame  # Import pygame for audio playback
 import gtts
 
+# Initialize pygame mixer
+pygame.init()
+pygame.mixer.init()
+
+
+
 # Load the trained model
 model = load_model("action.h5")
 
@@ -95,10 +101,6 @@ actions = ["नमस्कार", "धन्यवाद", "होय"]
 threshold = 0.7
 sequence = []
 predicted_words = []
-
-# Initialize pygame mixer
-pygame.init()
-pygame.mixer.init()
 
 
 # Function to play audio
