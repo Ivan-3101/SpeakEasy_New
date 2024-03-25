@@ -8,9 +8,9 @@ import os
 import pygame  # Import pygame for audio playback
 import gtts
 
-# Initialize pygame mixer
-pygame.init()
-pygame.mixer.init()
+# # Initialize pygame mixer
+# pygame.init()
+# pygame.mixer.init()
 
 
 
