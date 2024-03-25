@@ -5,3 +5,5 @@ tensorflow
 pygame
 gtts
 numpy
+time
+os
