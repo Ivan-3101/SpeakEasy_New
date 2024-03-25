@@ -59,10 +59,7 @@ st.sidebar.markdown(
 cap = cv2.VideoCapture(0)
 
 # Setting mediapipe model
-holistic = mp.solutions.holistic(
-    min_detection_confidence=0.5, min_tracking_confidence=0.5
-)
-
+holistic = mp.solutions.holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 with holistic as holistic:
 
     # Create a container for the predicted word
@@ -112,8 +109,7 @@ with holistic as holistic:
                         predicted_words.append(predicted_word)
                         audio_file_path = f"marathi_audio_files/{predicted_word}.mp3"
                         play_audio(audio_file_path)
-                        # Add a delay of 5 seconds
-                        pygame.time.wait(5000)
+
                     else:
                         st.warning("Empty prediction result.")
 
