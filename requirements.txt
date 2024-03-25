@@ -4,5 +4,4 @@ mediapipe
 tensorflow
 pygame
 gtts
-numpy
 os
