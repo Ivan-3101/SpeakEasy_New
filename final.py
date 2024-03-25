@@ -4,8 +4,8 @@ import numpy as np
 import mediapipe as mp
 from modules import mediapipe_detection, draw_styled_landmarks, extract_keypoints
 from tensorflow.keras.models import load_model
+from marathi_audio import play_marathi_audio  # Import the play_marathi_audio function
 import os
-import pygame  # Import pygame for audio playback
 
 # Load the trained model
 model = load_model("action.h5")
@@ -16,18 +16,9 @@ threshold = 0.7
 sequence = []
 predicted_words = []
 
-# Initialize pygame mixer
-pygame.init()
-pygame.mixer.init()
-
-# Function to play audio
-def play_audio(filename):
-    pygame.mixer.music.load(filename)
-    pygame.mixer.music.play()
-
-
 # Center the title
 st.markdown("<h1 style='text-align: center;'>SpeakEasy</h1>", unsafe_allow_html=True)
+
 # Add "How to Use the App" card section
 st.sidebar.markdown(
     """
@@ -42,7 +33,7 @@ st.sidebar.markdown(
         </ol>
     </div>
     """,
-    unsafe_allow_html=True,
+    unsafe_allow_html=True
 )
 
 # Add About card section
@@ -53,15 +44,13 @@ st.sidebar.markdown(
         <p>SpeakEasy is a Streamlit app for real-time sign language interpretation. It uses computer vision and machine learning techniques to recognize sign language gestures and translates them into spoken language.</p>
     </div>
     """,
-    unsafe_allow_html=True,
+    unsafe_allow_html=True
 )
 
 cap = cv2.VideoCapture(0)
 
 # Setting mediapipe model
-holistic = mp.solutions.holistic(
-    min_detection_confidence=0.5, min_tracking_confidence=0.5
-)
+holistic = mp.solutions.holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
 with holistic as holistic:
 
@@ -80,6 +69,10 @@ with holistic as holistic:
 
     with btn_col2:
         stop_button = st.button("Stop Video Capture")
+
+    # Initialize an expander for predicted words
+    with st.expander("**Predicted Words**", expanded=False) as predicted_words_expander:
+        predicted_words_text = st.empty()
 
     while cap.isOpened() and not stop_button:
         if start_button:
@@ -110,10 +103,7 @@ with holistic as holistic:
                     # Visual and audio logic
                     if res[np.argmax(res)] > threshold:
                         predicted_words.append(predicted_word)
-                        audio_file_path = f"marathi_audio_files/{predicted_word}.mp3"
-                        play_audio(audio_file_path)
-                        # Add a delay of 5 seconds
-                        pygame.time.wait(5000)
+                        play_marathi_audio(predicted_word)
                     else:
                         st.warning("Empty prediction result.")
 
@@ -124,3 +114,6 @@ with holistic as holistic:
             if predicted_word:
                 styled_text = f"<h3 style='text-align: center; color:green;'>Predicted Word: {predicted_word}</h3>"
                 predicted_word_container.markdown(styled_text, unsafe_allow_html=True)
+
+            # Update predicted words inside the expander
+            predicted_words_text.write(" ".join(predicted_words), unsafe_allow_html=True)

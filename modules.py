@@ -6,6 +6,8 @@ import pygame
 from gtts import gTTS
 from tensorflow.keras.models import load_model
 
+pygame.init()
+pygame.mixer.init()
 
 
 mp_holistic = mp.solutions.holistic  # Holistic model
