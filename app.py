@@ -9,13 +9,13 @@ import pygame  # Import pygame for audio playback
 import gtts
 
 # # Initialize pygame mixer
-# pygame.init()
+pygame.init()
 # pygame.mixer.init()
 
 
 
 # Load the trained model
-model = load_model("m26dropout.h5")
+model = load_model("action.h5")
 
 mp_holistic = mp.solutions.holistic  # Holistic model
 mp_drawing = mp.solutions.drawing_utils  # Drawing utilities
@@ -153,15 +153,20 @@ with holistic as holistic:
     # Display UI for video feed
     video_placeholder = st.empty()
 
+    # # Create empty columns
+    # empty_col1, btn_col1, btn_col2, empty_col2 = st.columns([1, 1, 1, 1])
+
     # Create empty columns
-    empty_col1, btn_col1, btn_col2, empty_col2 = st.columns([1, 1, 1, 1])
+    empty_col1, btn_col1, btn_col2, empty_col2 = st.columns([1, 3, 3, 1])
 
     # Center the buttons
     with btn_col1:
-        start_button = st.button("Start Video Capture")
+        st.markdown("<style>div.stButton>button{width:100%; height:100px;}</style>", unsafe_allow_html=True)
+        start_button = st.button("Start Video Capture", key="start_button")
 
     with btn_col2:
-        stop_button = st.button("Stop Video Capture")
+        st.markdown("<style>div.stButton>button{width:100%; height:100px;}</style>", unsafe_allow_html=True)
+        stop_button = st.button("Stop Video Capture", key="stop_button")
 
     while cap.isOpened() and not stop_button:
         if start_button:
